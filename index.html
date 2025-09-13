@@ -117,18 +117,28 @@
         }
         */
 if (num !== 0 && imageUrl) {
+  const x = (num - 1) % size;
+  const y = Math.floor((num - 1) / size);
+
   const img = document.createElement("img");
   img.src = imageUrl;
+
+  // パズル全体サイズで画像を表示（coverでトリミング）
   img.style.width = `${PUZZLE_SIZE}px`;
   img.style.height = `${PUZZLE_SIZE}px`;
-  img.style.objectFit = "cover";   // ← 画像を枠いっぱいに表示＆トリミング
-  img.style.objectPosition = 
-    `${-(x * PUZZLE_SIZE / size)}px ${-(y * PUZZLE_SIZE / size)}px`;
-  img.style.position = "absolute";
-  img.style.left = `${x * PUZZLE_SIZE / size}px`;
-  img.style.top = `${y * PUZZLE_SIZE / size}px`;
+  img.style.objectFit = "cover";
+
+  // タイルの位置に合わせて切り抜き
+  img.style.transform = `translate(${-x * PUZZLE_SIZE / size}px, ${-y * PUZZLE_SIZE / size}px)`;
+
+  // タイル内で表示されるようにする
+  img.style.pointerEvents = "none"; // 画像がクリックを邪魔しない
+  img.style.userSelect = "none";
+
+  div.style.overflow = "hidden";  // ← タイル枠でクリップ
   div.appendChild(img);
 }
+
         div.onclick = () => move(i);
         puzzle.appendChild(div);
       });

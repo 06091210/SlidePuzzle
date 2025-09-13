@@ -17,12 +17,28 @@
     }
     #puzzle {
       display: grid;
-      width: 40rem;/*400px into 40rem:*/
-      height: 40rem;/*400px into 40rem*/
+      /*width: 40rem; 400px into 40rem:*/
+      /*height: 40rem; 400px into 40rem*/
       gap: 0.2rem;
       margin: 20px auto;
       background: #ccc;
     }
+
+@media (orientation: portrait) {
+  #puzzle {
+    width: 100%;
+    height: 0;
+    padding-top: 100%; /* widthに対して高さを100%にする */
+  }
+}
+@media (orientation: landscape) {
+  #puzzle {
+    height: 100vh;
+    width: 0;
+    padding-left: 100vh; /* 高さに対して幅を100%にする */
+  }
+}
+
     /*.tile {
       background-size: 400px 400px;
       border-radius: 4px;

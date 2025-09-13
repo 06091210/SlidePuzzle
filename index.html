@@ -94,21 +94,11 @@
     let size = 4;
     let tiles = [];
     let imageUrl = null;
+    const puzzle = document.getElementById("puzzle");
     const PUZZLE_SIZE = puzzle.offsetWidth / size;
 
-    function init(newSize) {
-      size = newSize;
-      tiles = [...Array(size*size).keys()].map(n => (n+1)%(size*size));
-      draw();
-    }
-
-    
-
-  const puzzle = document.getElementById("puzzle");
-  const tileSize = puzzle.offsetWidth / size; // タイルのピクセルサイズを取得
 
     function draw() {
-      const puzzle = document.getElementById("puzzle");
       puzzle.style.gridTemplateColumns = repeat(${size}, 1fr);
       puzzle.style.gridTemplateRows = repeat(${size}, 1fr);
       puzzle.innerHTML = "";
@@ -133,7 +123,12 @@
       puzzle.appendChild(div);
     });
     }
-
+    
+    function init(newSize) {
+      size = newSize;
+      tiles = [...Array(size*size).keys()].map(n => (n+1)%(size*size));
+      draw();
+    }
 
     function resizePuzzle() {
   const puzzle = document.getElementById("puzzle");

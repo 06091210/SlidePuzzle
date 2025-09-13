@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>スライドパズル</title>
+  <title>スライドパズル-test</title>
   <style>
     body {
       font-family: sans-serif;
@@ -144,12 +144,12 @@ if (num !== 0 && imageUrl) {
   img.src = imageUrl;
 
   // パズル全体サイズで画像を表示（coverでトリミング）
-  img.style.width = `${PUZZLE_SIZE}rem`;
-  img.style.height = `${PUZZLE_SIZE}rem`;
+  img.style.width = `${PUZZLE_SIZE}px`;
+  img.style.height = `${PUZZLE_SIZE}px`;
   img.style.objectFit = "cover";
 
   // タイルの位置に合わせて切り抜き
-  img.style.transform = `translate(${-x * PUZZLE_SIZE / size}rem, ${-y * PUZZLE_SIZE / size}rem)`;
+  img.style.transform = `translate(${-x * PUZZLE_SIZE / size}px, ${-y * PUZZLE_SIZE / size}px)`;
 
   // タイル内で表示されるようにする
   img.style.pointerEvents = "none"; // 画像がクリックを邪魔しない

@@ -112,11 +112,10 @@
     puzzle.style.width = puzzle.offsetHeight + "px";
   }
 }
+    window.addEventListener("resize", resizePuzzle);
+    resizePuzzle();
     
     function draw() {
-
-      window.addEventListener("resize", resizePuzzle);
-      resizePuzzle();
       
       const puzzle = document.getElementById("puzzle");
       puzzle.style.gridTemplateColumns = `repeat(${size}, 1fr)`;

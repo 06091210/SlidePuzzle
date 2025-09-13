@@ -24,21 +24,6 @@
       background: #ccc;
     }
 
-@media (orientation: portrait) {
-  #puzzle {
-    width: 100%;
-    height: 0;
-    padding-top: 100%; /* widthに対して高さを100%にする */
-  }
-}
-@media (orientation: landscape) {
-  #puzzle {
-    height: 100vh;
-    width: 0;
-    padding-left: 100vh; /* 高さに対して幅を100%にする */
-  }
-}
-
     /*.tile {
       background-size: 400px 400px;
       border-radius: 4px;
@@ -117,7 +102,22 @@
       draw();
     }
 
+    function resizePuzzle() {
+  const puzzle = document.getElementById("puzzle");
+  if (window.innerWidth < window.innerHeight) {
+    puzzle.style.width = "100%";
+    puzzle.style.height = puzzle.offsetWidth + "px";
+  } else {
+    puzzle.style.height = "100vh";
+    puzzle.style.width = puzzle.offsetHeight + "px";
+  }
+}
+    
     function draw() {
+
+      window.addEventListener("resize", resizePuzzle);
+      resizePuzzle();
+      
       const puzzle = document.getElementById("puzzle");
       puzzle.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
       puzzle.style.gridTemplateRows = `repeat(${size}, 1fr)`;
@@ -144,12 +144,18 @@ if (num !== 0 && imageUrl) {
   img.src = imageUrl;
 
   // パズル全体サイズで画像を表示（coverでトリミング）
-  img.style.width = `${PUZZLE_SIZE}rem`;
+  /*img.style.width = `${PUZZLE_SIZE}rem`;
   img.style.height = `${PUZZLE_SIZE}rem`;
   img.style.objectFit = "cover";
 
   // タイルの位置に合わせて切り抜き
-  img.style.transform = `translate(${-x * PUZZLE_SIZE / size}rem, ${-y * PUZZLE_SIZE / size}rem)`;
+  img.style.transform = `translate(${-x * PUZZLE_SIZE / size}rem, ${-y * PUZZLE_SIZE / size}rem)`;*/
+  
+  const tileSize = document.getElementById("puzzle").offsetWidth / size;
+img.style.width = `${tileSize * size}px`;
+img.style.height = `${tileSize * size}px`;
+img.style.transform = `translate(${-x * tileSize}px, ${-y * tileSize}px)`;
+
 
   // タイル内で表示されるようにする
   img.style.pointerEvents = "none"; // 画像がクリックを邪魔しない

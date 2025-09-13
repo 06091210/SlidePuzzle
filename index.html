@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>スライドパズル</title>
+  <title>スライドパズル-test</title>
   <style>
     body {
       font-family: sans-serif;
@@ -102,6 +102,36 @@
       draw();
     }
 
+    
+    function draw() {
+  const puzzle = document.getElementById("puzzle");
+  puzzle.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  puzzle.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+  puzzle.innerHTML = "";
+
+  const tileSize = puzzle.offsetWidth / size; // タイルのピクセルサイズを取得
+
+  tiles.forEach((num, i) => {
+    const div = document.createElement("div");
+    div.className = "tile" + (num === 0 ? " empty" : "");
+    div.style.width = tileSize + "px";
+    div.style.height = tileSize + "px";
+
+    if (num !== 0 && imageUrl) {
+      const x = (num - 1) % size;
+      const y = Math.floor((num - 1) / size);
+
+      div.style.backgroundImage = `url(${imageUrl})`;
+      div.style.backgroundSize = `${tileSize * size}px ${tileSize * size}px`;
+      div.style.backgroundPosition = `-${x * tileSize}px -${y * tileSize}px`;
+    }
+
+    div.onclick = () => move(i);
+    puzzle.appendChild(div);
+  });
+}
+
+
     function resizePuzzle() {
   const puzzle = document.getElementById("puzzle");
   if (window.innerWidth < window.innerHeight) {
@@ -111,57 +141,10 @@
     puzzle.style.height = "100vh";
     puzzle.style.width = puzzle.offsetHeight + "px";
   }
+      draw();
 }
     window.addEventListener("resize", resizePuzzle);
     resizePuzzle();
-    
-    function draw() {
-      
-      const puzzle = document.getElementById("puzzle");
-      puzzle.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-      puzzle.style.gridTemplateRows = `repeat(${size}, 1fr)`;
-      puzzle.innerHTML = "";
-
-      tiles.forEach((num, i) => {
-        const div = document.createElement("div");
-        div.className = "tile" + (num === 0 ? " empty" : "");
-        /*
-        if (num !== 0 && imageUrl) {
-          const x = (num - 1) % size;
-          const y = Math.floor((num - 1) / size);
-          div.style.backgroundImage = `url(${imageUrl})`;
-          div.style.backgroundSize = `${PUZZLE_SIZE}px ${PUZZLE_SIZE}px`;
-          div.style.backgroundPosition = 
-            `${-(x * PUZZLE_SIZE / size)}px ${-(y * PUZZLE_SIZE / size)}px`;
-        }
-        */
-if (num !== 0 && imageUrl) {
-  const x = (num - 1) % size;
-  const y = Math.floor((num - 1) / size);
-
-  const img = document.createElement("img");
-  img.src = imageUrl;
-
-  // パズル全体サイズで画像を表示（coverでトリミング）
-  img.style.width = `${PUZZLE_SIZE}rem`;
-  img.style.height = `${PUZZLE_SIZE}rem`;
-  img.style.objectFit = "cover";
-
-  // タイルの位置に合わせて切り抜き
-  img.style.transform = `translate(${-x * PUZZLE_SIZE / size}rem, ${-y * PUZZLE_SIZE / size}rem)`;
-
-  // タイル内で表示されるようにする
-  img.style.pointerEvents = "none"; // 画像がクリックを邪魔しない
-  img.style.userSelect = "none";
-
-  div.style.overflow = "hidden";  // ← タイル枠でクリップ
-  div.appendChild(img);
-}
-
-        div.onclick = () => move(i);
-        puzzle.appendChild(div);
-      });
-    }
 
     function move(i) {
       const emptyIndex = tiles.indexOf(0);

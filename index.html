@@ -19,10 +19,17 @@
       margin: 20px auto;
       background: #ccc;
     }
-    .tile {
+    /*.tile {
       background-size: 400px 400px;
       border-radius: 4px;
       cursor: pointer;
+    }*/
+    .tile {
+      border-radius: 4px;
+      cursor: pointer;
+      background-repeat: no-repeat;
+      background-size: cover;      /* 枠いっぱいに表示（トリミングされる） */
+      background-position: center; /* 中央に寄せる */
     }
     .empty {
       background: white;
@@ -99,6 +106,7 @@
       tiles.forEach((num, i) => {
         const div = document.createElement("div");
         div.className = "tile" + (num === 0 ? " empty" : "");
+        /*
         if (num !== 0 && imageUrl) {
           const x = (num - 1) % size;
           const y = Math.floor((num - 1) / size);
@@ -106,6 +114,19 @@
           div.style.backgroundSize = `${PUZZLE_SIZE}px ${PUZZLE_SIZE}px`;
           div.style.backgroundPosition = 
             `${-(x * PUZZLE_SIZE / size)}px ${-(y * PUZZLE_SIZE / size)}px`;
+        }
+        */
+        if (num !== 0 && imageUrl) {
+          const img = document.createElement("img");
+          img.src = imageUrl;
+          img.style.width = `${PUZZLE_SIZE}px`;
+          img.style.height = `${PUZZLE_SIZE}px`;
+          img.style.objectFit = "cover";   // ← 画像を枠いっぱいに表示＆トリミング
+          img.style.objectPosition = `${-(x * PUZZLE_SIZE / size)}px ${-(y * PUZZLE_SIZE / size)}px`;
+          img.style.position = "absolute";
+          img.style.left = `${x * PUZZLE_SIZE / size}px`;
+          img.style.top = `${y * PUZZLE_SIZE / size}px`;
+          div.appendChild(img);
         }
         div.onclick = () => move(i);
         puzzle.appendChild(div);

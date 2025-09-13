@@ -117,17 +117,23 @@
         }
         */
         if (num !== 0 && imageUrl) {
-          const img = document.createElement("img");
-          img.src = imageUrl;
-          img.style.width = `${PUZZLE_SIZE}px`;
-          img.style.height = `${PUZZLE_SIZE}px`;
-          img.style.objectFit = "cover";   // ← 画像を枠いっぱいに表示＆トリミング
-          img.style.objectPosition = `${-(x * PUZZLE_SIZE / size)}px ${-(y * PUZZLE_SIZE / size)}px`;
-          img.style.position = "absolute";
-          img.style.left = `${x * PUZZLE_SIZE / size}px`;
-          img.style.top = `${y * PUZZLE_SIZE / size}px`;
-          div.appendChild(img);
-        }
+  const x = (num - 1) % size;
+  const y = Math.floor((num - 1) / size);
+
+  const img = document.createElement("img");
+  img.src = imageUrl;
+  img.style.width = `${PUZZLE_SIZE}px`;
+  img.style.height = `${PUZZLE_SIZE}px`;
+  img.style.objectFit = "cover";   // 枠いっぱいにトリミング表示
+  img.style.objectPosition = 
+    `${-(x * PUZZLE_SIZE / size)}px ${-(y * PUZZLE_SIZE / size)}px`;
+  img.style.position = "absolute";
+  img.style.left = `${x * PUZZLE_SIZE / size}px`;
+  img.style.top = `${y * PUZZLE_SIZE / size}px`;
+
+  div.style.position = "relative"; // ← 親要素基準で配置するため必要
+  div.appendChild(img);
+}
         div.onclick = () => move(i);
         puzzle.appendChild(div);
       });

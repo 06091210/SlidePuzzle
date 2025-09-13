@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>スライドパズル</title>
+  <title>スライドパズル-test</title>
   <style>
     body {
       font-family: sans-serif;
@@ -11,18 +11,14 @@
       position: relative;
       overflow: hidden;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
-      font-siza: 1rem;
       
     }
     #puzzle {
       display: grid;
       width: 40rem;/*400px into 40rem:*/
       height: 40rem;/*400px into 40rem*/
-      gap: 2px;
+      gap: 2rem;/*px into rem*/
       margin: 20px auto;
       background: #ccc;
     }
@@ -32,7 +28,7 @@
       cursor: pointer;
     }*/
     .tile {
-      border-radius: 4px;
+      border-radius: 4rem;/*px into rem*/
       cursor: pointer;
       background-repeat: no-repeat;
       background-size: cover;      /* 枠いっぱいに表示（トリミングされる） */

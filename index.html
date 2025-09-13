@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>スライドパズル-test</title>
+  <title>スライドパズル</title>
   <style>
     body {
       font-family: sans-serif;
@@ -114,11 +114,10 @@
     window.addEventListener("resize", resizePuzzle);
     resizePuzzle();
 
-    const puzzle = document.getElementById("puzzle");
-    const PUZZLE_SIZE = puzzle.offsetWidth;
     function draw() {
       
-      //const puzzle = document.getElementById("puzzle");
+      const puzzle = document.getElementById("puzzle");
+      const PUZZLE_SIZE = puzzle.offsetWidth;
       puzzle.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
       puzzle.style.gridTemplateRows = `repeat(${size}, 1fr)`;
       puzzle.innerHTML = "";

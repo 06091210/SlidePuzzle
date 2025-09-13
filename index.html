@@ -94,7 +94,6 @@
     let size = 4;
     let tiles = [];
     let imageUrl = null;
-    const PUZZLE_SIZE = 40;
 
     function init(newSize) {
       size = newSize;
@@ -114,10 +113,12 @@
 }
     window.addEventListener("resize", resizePuzzle);
     resizePuzzle();
-    
+
+    const puzzle = document.getElementById("puzzle");
+    const PUZZLE_SIZE = puzzle.offsetWidth;
     function draw() {
       
-      const puzzle = document.getElementById("puzzle");
+      //const puzzle = document.getElementById("puzzle");
       puzzle.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
       puzzle.style.gridTemplateRows = `repeat(${size}, 1fr)`;
       puzzle.innerHTML = "";

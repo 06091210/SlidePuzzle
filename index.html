@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>スライドパズル</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    #puzzle {
+      display: grid;
+      width: 400px;
+      height: 400px;
+      gap: 2px;
+      margin: 20px auto;
+      background: #ccc;
+    }
+    .tile {
+      background-size: 400px 400px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .empty {
+      background: white;
+      cursor: default;
+    }
+
+    /* 派手なクリア表示 */
+    #message {
+      font-size: 48px;
+      font-weight: bold;
+      color: gold;
+      text-shadow: 0 0 10px orange, 0 0 20px red, 0 0 30px yellow;
+      opacity: 0;
+      animation: none;
+      margin-top: 20px;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* 紙吹雪用 */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: red;
+      opacity: 0.8;
+      top: -10px;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  
+  <input type="file" id="imageInput" accept="image/*" onchange="loadImage()"><br><br>
+
+  <div id="puzzle"></div>
+  
+  <label for="sizeSelect">サイズ:</label>
+  <select id="sizeSelect" onchange="changeSize()">
+    <option value="3">3×3</option>
+    <option value="4" selected>4×4</option>
+    <option value="5">5×5</option>
+    <option value="6">6×6</option>
+  </select>
+  
+  <button onclick="shuffle()">シャッフル</button>
+  <p id="message">クリア！🎉</p>
+
+  <script>
+    let size = 4;
+    let tiles = [];
+    let imageUrl = null;
+    const PUZZLE_SIZE = 400;
+
+    function init(newSize) {
+      size = newSize;
+      tiles = [...Array(size*size).keys()].map(n => (n+1)%(size*size));
+      draw();
+    }
+
+    function draw() {
+      const puzzle = document.getElementById("puzzle");
+      puzzle.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+      puzzle.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+      puzzle.innerHTML = "";
+
+      tiles.forEach((num, i) => {
+        const div = document.createElement("div");
+        div.className = "tile" + (num === 0 ? " empty" : "");
+        if (num !== 0 && imageUrl) {
+          const x = (num - 1) % size;
+          const y = Math.floor((num - 1) / size);
+          div.style.backgroundImage = `url(${imageUrl})`;
+          div.style.backgroundSize = `${PUZZLE_SIZE}px ${PUZZLE_SIZE}px`;
+          div.style.backgroundPosition = 
+            `${-(x * PUZZLE_SIZE / size)}px ${-(y * PUZZLE_SIZE / size)}px`;
+        }
+        div.onclick = () => move(i);
+        puzzle.appendChild(div);
+      });
+    }
+
+    function move(i) {
+      const emptyIndex = tiles.indexOf(0);
+      const validMoves = [emptyIndex-1, emptyIndex+1, emptyIndex-size, emptyIndex+size];
+      if (validMoves.includes(i) && isAdjacent(i, emptyIndex)) {
+        [tiles[i], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[i]];
+        draw();
+        checkClear();
+      }
+    }
+
+    function isAdjacent(i, j) {
+      const xi = i % size, yi = Math.floor(i / size);
+      const xj = j % size, yj = Math.floor(j / size);
+      return (Math.abs(xi-xj) + Math.abs(yi-yj) === 1);
+    }
+
+    function shuffle() {
+      for (let k=0; k<1000; k++) {
+        const emptyIndex = tiles.indexOf(0);
+        const neighbors = [emptyIndex-1, emptyIndex+1, emptyIndex-size, emptyIndex+size]
+          .filter(n => n>=0 && n<size*size && isAdjacent(n, emptyIndex));
+        const r = neighbors[Math.floor(Math.random()*neighbors.length)];
+        [tiles[r], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[r]];
+      }
+      draw();
+      resetMessage();
+    }
+
+    function checkClear() {
+      if (tiles.every((v,i) => v === (i+1)%(size*size))) {
+        showClearEffect();
+      }
+    }
+
+    function changeSize() {
+      const select = document.getElementById("sizeSelect");
+      init(parseInt(select.value));
+      resetMessage();
+      shuffle();
+    }
+
+    function loadImage() {
+      const file = document.getElementById("imageInput").files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          imageUrl = e.target.result;
+          draw();
+        };
+        reader.readAsDataURL(file);
+      }
+      shuffle();
+    }
+
+    function resetMessage() {
+      const msg = document.getElementById("message");
+      msg.style.opacity = 0;
+      msg.style.animation = "none";
+    }
+
+    function showClearEffect() {
+      const msg = document.getElementById("message");
+      msg.style.opacity = 1;
+      msg.style.animation = "popIn 1s ease forwards";
+
+      // 紙吹雪を追加
+      for (let i = 0; i < 100; i++) {
+        const conf = document.createElement("div");
+        conf.className = "confetti";
+        conf.style.left = Math.random() * window.innerWidth + "px";
+        conf.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+        conf.style.animationDuration = (2 + Math.random()*3) + "s";
+        document.body.appendChild(conf);
+        setTimeout(() => conf.remove(), 5000);
+      }
+    }
+
+    // 初期化
+    init(size);
+  </script>
+</body>
+</html>
